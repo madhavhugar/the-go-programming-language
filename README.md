@@ -1,5 +1,5 @@
-### The Go Programming Language Workrepo
+### The Go Programming Language WorkRepo
 
-All code relevant while reading the book [The Go Programming Language](https://www.gopl.io/)
+Whatever I felt relevant to implement while reading the book [The Go Programming Language](https://www.gopl.io/)
 
 - [Methods](./6-methods)
