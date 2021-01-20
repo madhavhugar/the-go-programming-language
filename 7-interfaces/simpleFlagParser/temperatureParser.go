@@ -15,6 +15,10 @@ func fahrenheitToCelsius(t float64) Celsius {
 	return Celsius((t - 32) * 5 / 9)
 }
 
+func kelvinToCelsius(t float64) Celsius {
+	return Celsius(t - 273.15)
+}
+
 type CelsiusFlag struct{ Celsius }
 
 func (c *CelsiusFlag) Set(input string) error {
@@ -30,6 +34,9 @@ func (c *CelsiusFlag) Set(input string) error {
 		return nil
 	case "F", "°F":
 		c.Celsius = fahrenheitToCelsius(temp)
+		return nil
+	case "K", "°K":
+		c.Celsius = kelvinToCelsius(temp)
 		return nil
 	}
 	return fmt.Errorf("No unit found")
