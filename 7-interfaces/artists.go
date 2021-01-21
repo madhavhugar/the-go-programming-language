@@ -40,3 +40,20 @@ type byYear []*Track
 func (a byYear) Len() int           { return len(a) }
 func (a byYear) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a byYear) Less(i, j int) bool { return a[i].Year < a[j].Year }
+
+type byTitleYearLength []*Track
+
+func (a byTitleYearLength) Len() int      { return len(a) }
+func (a byTitleYearLength) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a byTitleYearLength) Less(i, j int) bool {
+	if a[i].Title != a[j].Title {
+		return a[i].Title < a[j].Title
+	}
+	if a[i].Year != a[j].Year {
+		return a[i].Year < a[j].Year
+	}
+	if a[i].Length != a[j].Length {
+		return a[i].Length < a[j].Length
+	}
+	return false
+}
