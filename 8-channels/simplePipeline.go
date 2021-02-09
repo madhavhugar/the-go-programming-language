@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
 	naturals := make(chan int)
@@ -8,18 +11,24 @@ func main() {
 
 	// natural number generator
 	go func() {
-		for i := 0; i < 100; i++ {
+		defer close(naturals)
+		for i := 0; i < 5; i++ {
 			naturals <- i
+			time.Sleep(time.Second * 1)
 		}
 	}()
 
 	// number squarer
 	go func() {
-		n := <-naturals
-		squarer <- n * n
+		defer close(naturals)
+		for {
+			n := <-naturals
+			squarer <- n * n
+		}
 	}()
 
 	// number printer
-	s := <-squarer
-	fmt.Println(s)
+	for {
+		fmt.Println(<-squarer)
+	}
 }
