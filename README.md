@@ -4,3 +4,4 @@ Code implemented while reading the book [The Go Programming Language](https://ww
 
 - [Methods](./6-methods)
 - [Interfaces](./7-interfaces)
+- [Channels](./8-channels)
