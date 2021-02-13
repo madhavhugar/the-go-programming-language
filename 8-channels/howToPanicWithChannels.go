@@ -2,6 +2,12 @@ package channels
 
 import "fmt"
 
+func panicOnClosingClosedChannel() {
+	c := make(chan int)
+	close(c)
+	close(c)
+}
+
 func panicOnSendToClosedChannel() {
 	// create an unbuffered channel of type bool
 	c := make(chan bool)
