@@ -34,7 +34,7 @@ func (s *CakeStore) bakeCake(bakeChan chan int) {
 }
 
 func (s *CakeStore) iceCake(bakeChan chan int, inscribeChan chan int) {
-	defer close(inscribeChan)
+	// defer close(inscribeChan)
 	for c := range bakeChan {
 		if s.Verbose {
 			fmt.Println("Icing cake: ", c)
@@ -45,7 +45,8 @@ func (s *CakeStore) iceCake(bakeChan chan int, inscribeChan chan int) {
 }
 
 func (s *CakeStore) inscribeCake(inscribeChan chan int) {
-	for c := range inscribeChan {
+	for i := 0; i < s.Cakes; i++ {
+		c := <-inscribeChan
 		if s.Verbose {
 			fmt.Println("Inscribing cake: ", c)
 		}
@@ -59,12 +60,14 @@ func work(workTime, stdDev time.Duration) {
 }
 
 func (s *CakeStore) Work(n int) {
-	bakeChan := make(chan int, s.BakeBuffer)
-	iceChan := make(chan int, s.IcingBuffer)
+	for run := 0; run < n; run++ {
+		bakeChan := make(chan int, s.BakeBuffer)
+		iceChan := make(chan int, s.IcingBuffer)
 
-	go s.bakeCake(bakeChan)
-	for i := 0; i < s.IcingStaff; i++ {
-		go s.iceCake(bakeChan, iceChan)
+		go s.bakeCake(bakeChan)
+		for i := 0; i < s.IcingStaff; i++ {
+			go s.iceCake(bakeChan, iceChan)
+		}
+		s.inscribeCake(iceChan)
 	}
-	s.inscribeCake(iceChan)
 }
