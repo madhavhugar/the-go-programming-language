@@ -20,5 +20,15 @@ var defaults = CakeStore{
 
 func Benchmark(b *testing.B) {
 	cakeshop := defaults
-	cakeshop.Work(b.N) // 0.275 ns/op
+
+	cakeshop.Work(b.N) // 274177435 ns/op
+}
+
+func BenchmarkWithDeviation(b *testing.B) {
+	cakeshop := defaults
+	cakeshop.BakeStdDev = cakeshop.BakeTime / 4
+	cakeshop.IcingStdDev = cakeshop.IcingTime
+	cakeshop.IcingStaff = 2
+
+	cakeshop.Work(b.N) // 294167864 ns/op
 }
