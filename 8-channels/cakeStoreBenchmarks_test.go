@@ -32,3 +32,17 @@ func BenchmarkWithDeviation(b *testing.B) {
 
 	cakeshop.Work(b.N) // 294167864 ns/op
 }
+
+func BenchmarkCakeStore(b *testing.B) {
+	cakestore := defaults
+	cakestore.IcingStaff = 10
+	cakestore.Cakes = 100
+	cakestore.BakeTime = 10
+	cakestore.IcingTime = 1000
+	cakestore.InscribeTime = 5
+
+	cakestore.IcingBuffer = 5
+	cakestore.BakeBuffer = 1
+
+	cakestore.Work(b.N)
+}
