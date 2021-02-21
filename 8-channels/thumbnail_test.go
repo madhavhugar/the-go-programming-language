@@ -1,6 +1,7 @@
 package channels
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -21,4 +22,22 @@ func TestParallelGoRoutinesWithUnbufferedChannel(t *testing.T) {
 	expected := []string{"kitty_thumbnail", "foo_thumbnail", "cookie_thumbnail", "bar_thumbnail"}
 
 	assert.ElementsMatch(t, expected, got)
+}
+
+func TestParallelGoRoutinesWithBufferedChannel(t *testing.T) {
+	// happy case
+	files := []string{"kitty", "foo", "cookie", "bar"}
+	got, err := parallelGoRoutinesWithBufferedChannel(files)
+	expected := []string{"kitty_thumbnail", "foo_thumbnail", "cookie_thumbnail", "bar_thumbnail"}
+
+	assert.ElementsMatch(t, expected, got)
+	assert.Equal(t, nil, err)
+
+	// error case
+	files = []string{"kitty", "foo", "error", "bar"}
+	got, err = parallelGoRoutinesWithBufferedChannel(files)
+	expected = nil
+
+	assert.ElementsMatch(t, expected, got)
+	assert.Equal(t, fmt.Errorf("invalid file"), err)
 }
