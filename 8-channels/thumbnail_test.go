@@ -41,3 +41,20 @@ func TestParallelGoRoutinesWithBufferedChannel(t *testing.T) {
 	assert.ElementsMatch(t, expected, got)
 	assert.Equal(t, fmt.Errorf("invalid file"), err)
 }
+
+func TestParallelGoRoutinesWithWaitGroup(t *testing.T) {
+	files := []string{"kitty", "foo", "cookie", "bar"}
+	got, err := parallelGoRoutinesWithWaitGroup(files)
+	expected := []string{"kitty_thumbnail", "foo_thumbnail", "cookie_thumbnail", "bar_thumbnail"}
+
+	assert.ElementsMatch(t, expected, got)
+	assert.Equal(t, nil, err)
+
+	// error case
+	files = []string{"kitty", "foo", "error", "bar"}
+	got, err = parallelGoRoutinesWithWaitGroup(files)
+	expected = nil
+
+	assert.ElementsMatch(t, expected, got)
+	assert.Equal(t, fmt.Errorf("invalid file"), err)
+}
