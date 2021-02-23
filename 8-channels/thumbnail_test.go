@@ -58,3 +58,14 @@ func TestParallelGoRoutinesWithWaitGroup(t *testing.T) {
 	assert.ElementsMatch(t, expected, got)
 	assert.Equal(t, fmt.Errorf("invalid file"), err)
 }
+
+func TestParallelGoRoutinesWithInputFromChannels(t *testing.T) {
+	filenames := make(chan string, 4)
+	files := []string{"kitty", "foo", "cookie", "bar"}
+	for _, f := range files {
+		filenames <- f
+	}
+	close(filenames)
+
+	_ = parallelGoRoutinesWithInputFromChannels(filenames)
+}
