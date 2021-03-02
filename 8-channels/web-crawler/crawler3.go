@@ -8,7 +8,7 @@ import (
 // how to avoid unbounded parallelism
 // we create a buffered channel, that behaves
 // like a bouncer for only certain number of
-// goroutines to execute at a given time
+// goroutines to execute at a given time...
 
 var bouncer = make(chan struct{}, 20)
 
