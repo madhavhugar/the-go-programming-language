@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 
 // we avoid unbounded parallelism
 // by creating a predefined number
@@ -16,12 +19,28 @@ func crawl4(url string) []string {
 }
 
 var worklist = make(chan string, 20)
+var resultlist = make(chan []string)
 
 func workers() {
+	go func() {
+		worklist <- os.Args[1]
+	}()
+
 	for i := 0; i < 20; i++ {
 		go func() {
-			url := <-worklist
-			<-crawl4(url)
+			for url := range worklist {
+				resultlist <- crawl4(url)
+			}
 		}()
 	}
+
+	for list := range resultlist {
+		for _, url := range list {
+			worklist <- url
+		}
+	}
+}
+
+func main() {
+	workers()
 }
