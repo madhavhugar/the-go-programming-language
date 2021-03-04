@@ -18,7 +18,7 @@ func crawl4(url string) []string {
 	return links
 }
 
-var worklist = make(chan string, 20)
+var worklist = make(chan string)
 var resultlist = make(chan []string)
 
 func workers() {
@@ -29,14 +29,24 @@ func workers() {
 	for i := 0; i < 20; i++ {
 		go func() {
 			for url := range worklist {
-				resultlist <- crawl4(url)
+				unseenLinks := crawl4(url)
+				// Option A: ensure that sending to resultlist is not blocking
+				// by performing the send operation inside a goroutine
+				// which is commented here
+				// go func() {
+				resultlist <- unseenLinks
+				// }()
 			}
 		}()
 	}
 
 	for list := range resultlist {
 		for _, url := range list {
-			worklist <- url
+			// Option B: ensure that sending to worklist is not blocking
+			// by performing the send operation inside a goroutine
+			go func() {
+				worklist <- url
+			}()
 		}
 	}
 }
