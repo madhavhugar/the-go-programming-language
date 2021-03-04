@@ -40,13 +40,17 @@ func workers() {
 		}()
 	}
 
+	seen := make(map[string]bool)
 	for list := range resultlist {
 		for _, url := range list {
-			// Option B: ensure that sending to worklist is not blocking
-			// by performing the send operation inside a goroutine
-			go func() {
-				worklist <- url
-			}()
+			if !seen[url] {
+				seen[url] = true
+				// Option B: ensure that sending to worklist is not blocking
+				// by performing the send operation inside a goroutine
+				go func() {
+					worklist <- url
+				}()
+			}
 		}
 	}
 }
