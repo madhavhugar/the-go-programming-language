@@ -9,7 +9,7 @@ import (
 var aborting = make(chan struct{})
 
 func pressAbort() {
-	os.Stdin.Read(make([]byte, 2))
+	os.Stdin.Read(make([]byte, 1))
 	aborting <- struct{}{}
 }
 
