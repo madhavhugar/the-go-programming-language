@@ -44,10 +44,13 @@ func init() {
 }
 
 func main() {
+	roots := []string{*root}
 	filesize := make(chan int64)
 
 	go func() {
-		WalkDirOne(*root, filesize)
+		for _, r := range roots {
+			WalkDirOne(r, filesize)
+		}
 		close(filesize)
 	}()
 
