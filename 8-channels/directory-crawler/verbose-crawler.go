@@ -6,14 +6,17 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 )
 
-func WalkDirOne(path string, filesize chan int64) {
+func WalkDirOne(path string, filesize chan int64, wg *sync.WaitGroup) {
+	defer wg.Done()
 	for _, file := range directoryEntriesOne(path) {
 		if file.IsDir() {
 			fullpath := filepath.Join(path, file.Name())
-			WalkDirOne(fullpath, filesize)
+			wg.Add(1)
+			WalkDirOne(fullpath, filesize, wg)
 		} else {
 			filesize <- file.Size()
 		}
@@ -48,9 +51,13 @@ func main() {
 	filesize := make(chan int64)
 
 	go func() {
+		var wg sync.WaitGroup
 		for _, r := range roots {
-			WalkDirOne(r, filesize)
+			wg.Add(1)
+			go WalkDirOne(r, filesize, &wg)
 		}
+		time.Sleep(time.Second)
+		wg.Wait()
 		close(filesize)
 	}()
 
