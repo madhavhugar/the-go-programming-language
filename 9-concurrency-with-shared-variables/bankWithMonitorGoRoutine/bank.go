@@ -12,6 +12,15 @@ func Balance() float64 {
 	return b
 }
 
+func Withdraw(amount float64) bool {
+	deposit <- -amount
+	if b := <- balances; b < 0 {
+		deposit <- amount
+		return false
+	}
+	return true
+}
+
 func teller() {
 	var balance float64
 	for {
