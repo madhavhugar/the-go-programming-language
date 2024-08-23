@@ -11,3 +11,4 @@ func BenchmarkPrototype(b *testing.B) {
 		add(2, 5)
 	}
 }
+ 
